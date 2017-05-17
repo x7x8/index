@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+  <meta charset="utf-8" /> 
+  <title>@hB8v1L</title> 
+  <script src="./jquery.js"></script> 
+  <script src="./md5.js"></script> 
+  <script type="text/javascript">
+		function countCode(){
+			var password = $("#password").val();
+			var key = $("#key").val();
+			if(password && key){
+				var md5one = $.md5(password,key);
+				var md5two = $.md5(md5one,'Ae3@1L');
+				var md5three = $.md5(md5one,')kH6&/');
+				//计算大小写
+				var rule = md5three.split("");
+				var source = md5two.split("");
+				for(var i=0;i<=31;i++){
+					if(isNaN(source[i])){
+						str ="adgjlqetuozcbm135790";
+						if(str.search(rule[i]) > -1){
+							source[i] = source[i].toUpperCase();
+						}
+					}
+				}
+				var code32 = source.join("");
+				var code1 = code32.slice(0,1);
+				if(isNaN(code1)){
+					var code16 = code32.slice(0,12);
+					}else{
+					var code16 = code32.slice(1,12);
+					}
+				$("#code16").val(code16);
+			}
+		}
+
+		$(function(){ 
+			$('#password').change(countCode);
+			$('#key').change(countCode);
+			$('#password').keyup(countCode);
+			$('#key').keyup(countCode);
+		});
+		</script> 
+ </head> 
+ <body> 
+  <div class="container"> 
+   <div id="content" class="row"> 
+    <div class="span9"> 
+     <div id="input"> 
+      <label for="password">1</label>
+      <input id="password" name="password" value="" tabindex="1" type="password" /> 
+      <span>+</span> 
+      <label for="key">2</label>
+      <input id="key" name="key" tabindex="2" type="text" /> 
+     </div> 
+     <div id="get"> 
+      <label for="password">3 </label><input type="text" id ="code16">
+     </div> 
+    </div> 
+   </div>
+  </div>
+ </body>
+</html>
