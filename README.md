@@ -3,7 +3,8 @@
 ## Function Introduction
 
 ##### User login device fingerprint storage
-	When the user logs in successfully through SSO or other interfaces.Call this interface，The user UID,CID,IP,device fingerprint and other information are written in [device fingerprint records].
+	When the user logs in successfully through SSO or other interfaces.Call this interface，
+	The user UID,CID,IP,device fingerprint and other information are written in [device fingerprint records].
 ##### Dynamic start user login secondary authentication
 	When the user needs to open a second authentication.
 	Call the interface,The interface will query from table[USER_LOGIN_LOG] with the defined rules.
