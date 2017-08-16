@@ -46,13 +46,10 @@ $ ./server --skylb-endpoints localhost:1900  --alsologtostderr -v=3
 $ ./client --skylb-endpoints localhost:1900  --alsologtostderr -v=3
 ```
 ## How to call this service
-
-It can be called by SKYLB.This GRPC service is registered in SKYLB:vexpb.ServiceId_LOGIN_LOG_SERVICE
-
-The GRPC client can pass this number,Create a GRPC client,such as:
-skycli = skylb.NewServiceCli(vexpb.ServiceId_LOGIN_LOG_SERVICE)
-
-For more details,see this file：user_login_log/cmd/client.go
+	It can be called by SKYLB.This GRPC service is registered in SKYLB:vexpb.ServiceId_LOGIN_LOG_SERVICE
+	The GRPC client can pass this number,Create a GRPC client,such as:
+	skycli = skylb.NewServiceCli(vexpb.ServiceId_LOGIN_LOG_SERVICE)
+	For more details,see this file：user_login_log/cmd/client.go
 
 ## Data table(USER_LOGIN_LOG)
 
