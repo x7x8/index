@@ -53,12 +53,12 @@ $ ./client --skylb-endpoints localhost:1900  --alsologtostderr -v=3
 
 ## Data table(USER_LOGIN_LOG)
 
-|Column |type |length |key|remark
-| ------------| -------- | :--------: |:--------:| ------------ |
-|id|		int|		11|	y|	ID No,primary key,auto increment
-|uid	|	varchar	|	20|	n|	user UID
-|cid	|	varchar	|	20|	n|	user CID
-|ip	|	varchar	|	32|	n|	User login source IP
-|fingerContent	|varchar	|	500|	n|	Fingerprint content,User-Agent,device ID,etc.
-|createTime|	datetime|	0|	n|	recording time
-|clientFlag|	char	|	2|	n|	Client Identifier:1-web,2-app,3-pc
+|    Column    |   type   | length | key | remark
+| -----------  | -------- | ------ | --- | ------------ |
+|id            |int       |	11     |  y  |	ID No,primary key,auto increment
+|uid	       |varchar	  |	20     |  n  |	user UID
+|cid	       |varchar	  |	20     |  n  |	user CID
+|ip            |varchar	  |	32     |  n  |	User login source IP
+|fingerContent |varchar	  |	500    |  n  |	Fingerprint content,User-Agent,device ID,etc.
+|createTime    |datetime  |	0      |  n  |	recording time
+|clientFlag    |char	  |	2      |  n  |	Client Identifier:1-web,2-app,3-pc
