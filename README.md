@@ -54,7 +54,7 @@ $ ./client --skylb-endpoints localhost:1900  --alsologtostderr -v=3
 ## Data table(USER_LOGIN_LOG)
 
 |Column |type |length |key|remark
-| ------------| -------- | -------- |-------- | ------------ |
+| ------------| -------- | :--------: |:--------:| ------------ |
 |id|		int|		11|	y|	ID No,primary key,auto increment
 |uid	|	varchar	|	20|	n|	user UID
 |cid	|	varchar	|	20|	n|	user CID
