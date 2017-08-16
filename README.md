@@ -1,64 +1,81 @@
-# User-Login-Log GRPC service
-
-## Function Introduction
-
-### User login device fingerprint storage
-	When the user logs in successfully through SSO or other interfaces,Call this interface,
-	The user UID,CID,IP,device fingerprint and other information are written in [device fingerprint records].
-
-### Dynamic start user login secondary authentication
-	When the user needs to open a second authentication.
-	Call the interface,The interface will query from table[USER_LOGIN_LOG] with the defined rules.
-	Then returns whether to open a secondary authentication.
-
-## How do build this service
-
-### Fetch Source Code
-turn to my-bazel directory,and then track this repository
-```bash
-$ cd my-bazel
-$ sc track login-log-service
-$ sc deps login-log-service
-```
-
-### build server
-```bash
-$ bazel build login-log-service/cmd:server
-```
-
-### build client
-```bash
-$ bazel build login-log-service/cmd:client
-```
-
-### start skylb docker-compose
-```bash
-$ docker-compose -f docker-compose/dev/skylb/docker-compose.yml up
-```
-
-### start server
-```bash
-$ ./server --skylb-endpoints localhost:1900  --alsologtostderr -v=3
-```
-
-### start client
-```bash
-$ ./client --skylb-endpoints localhost:1900  --alsologtostderr -v=3
-```
-## How to call this service
-	It can be called by SKYLB.This GRPC service is registered in SKYLB:vexpb.ServiceId_LOGIN_LOG_SERVICE
-	The GRPC client can pass this number,Create a GRPC client,such as:
-	skycli = skylb.NewServiceCli(vexpb.ServiceId_LOGIN_LOG_SERVICE)
-	For more details,see this file：user_login_log/cmd/client.go
-
-## Data table(USER_LOGIN_LOG)
-
-|    Column    |   type   | length | key | remark
-| -----------  | -------- | ------ | --- | ------------ |
-|id            |int       |	11     |  y  |	ID No,primary key,auto increment
-|uid	       |varchar	  |	20     |  n  |	user UID
-|cid	       |varchar	  |	20     |  n  |	user CID
-|ip            |varchar	  |	32     |  n  |	User login source IP
-|fingerContent |varchar	  |	500    |  n  |	Fingerprint content,User-Agent,device ID,etc.
-|createTime    |datetime  |	0      |  n  |	recording time
-|clientFlag    |char	  |	2      |  n  |	Client Identifier:1-web,2-app,3-pc
+<table>
+   <tr>
+      <td>流程</td>
+      <td>工作</td>
+      <td>详情</td>
+      <td>需求</td>
+      <td>分工</td>
+      <td>所处位置</td>
+   </tr>
+   <tr>
+      <td>1</td>
+      <td>获取设备信息功能（web端新开发，移动和PC端可沿用设备ID）</td>
+      <td>"用户登录，前端代码收集用户环境信息，生成唯一标识。</td>
+   </tr>
+   <tr>
+      <td>"</td>
+      <td>不同设备唯一标识不同，设备环境更新不影响唯一标识。</td>
+      <td>前端开发</td>
+      <td>客户端</td>
+   </tr>
+   <tr>
+      <td>2</td>
+      <td>设备指纹生成功能</td>
+      <td>前端将唯一标识传递到服务端，服务端根据唯一标识和本地算法进行运算生成设备指纹</td>
+      <td>加密或hash，防止指纹伪造</td>
+      <td>后端开发</td>
+      <td>服务端</td>
+   </tr>
+   <tr>
+      <td>3</td>
+      <td>基础数据表</td>
+      <td>将设备指纹连同cid、uid、aid、登录时间、登录源ip存储到数据库。生成基础的用户信息与设备指纹关联表，做为后续服务基础数据。</td>
+      <td>至少包含cid、uid、aid、登录时间、登录ip、设备指纹信息。可包含更多信息辅助判断，比如地理位置、设备型号等</td>
+      <td>后端开发</td>
+      <td>数据库</td>
+   </tr>
+   <tr>
+      <td>4</td>
+      <td>携带设备指纹登录接口</td>
+      <td>设备指纹生成后，三端客户端携带设备指纹进行登录。</td>
+      <td>可包含在cookie或者其它http头字段，也可包含在参数中</td>
+      <td>客户端开发</td>
+      <td>客户端</td>
+   </tr>
+   <tr>
+      <td>5</td>
+      <td>设备指纹校验接口，登录数据统计表</td>
+      <td>服务端查询用户设备指纹关联表，校验设备指纹是否变化，更新登录数据统计表。</td>
+      <td>除基础数据表信息，还应包含变化频次信息，变化后持续时间信息等</td>
+      <td>后端开发</td>
+      <td>服务端</td>
+   </tr>
+   <tr>
+      <td>6</td>
+      <td>异常登录响应模块</td>
+      <td>"当发生设备指纹变化，响应不同的状态码给前端，以便响应不同的页面。</td>
+   </tr>
+   <tr>
+      <td>例如：返回200，响应用户正常页面</td>
+   </tr>
+   <tr>
+      <td>           返回302，响应用户二次校验页面，需要输入手机短信验证码</td>
+   </tr>
+   <tr>
+      <td>           返回303，响应用户警示信息页面，包含上一次登录的时间、ip、设备"</td>
+      <td>异常响应根据风险模型算法返回对应状态码，例如频繁的设备变动返回302</td>
+      <td>后端开发</td>
+      <td>服务端</td>
+   </tr>
+   <tr>
+      <td>7</td>
+      <td>完善登录认证功能</td>
+      <td>开启登录认证，调用完整异常登录响应功能，不开启登录认证，只告警不二次验证。</td>
+      <td>开启登录认证，可选三端均生效，或仅针对某一端生效</td>
+      <td>后端开发</td>
+      <td>服务端</td>
+   </tr>
+   <tr>
+      <td></td>
+   </tr>
+</table>
